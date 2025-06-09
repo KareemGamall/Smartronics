@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+
+<div class="error-container">
+    <h1>Oops! Something went wrong</h1>
+    <% if (typeof message !== 'undefined') { %>
+        <p class="error-message"><%= message %></p>
+    <% } else { %>
+        <p class="error-message">An unexpected error occurred. Please try again later.</p>
+    <% } %>
+    <% if (error && Object.keys(error).length > 0) { %>
+        <div class="error-details">
+            <pre><%= JSON.stringify(error, null, 2) %></pre>
+        </div>
+    <% } %>
+    <a href="/" class="btn">Return to Home</a>
+</div>
+
+<%- include('../partials/footer') %> 

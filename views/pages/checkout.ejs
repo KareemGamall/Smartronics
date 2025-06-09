@@ -1,0 +1,93 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+    <h2>Checkout</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% cart.items.forEach(item => { %>
+                                <tr>
+                                    <td><%= item.product.name %></td>
+                                    <td><%= item.quantity %></td>
+                                    <td>$<%= item.price.toFixed(2) %></td>
+                                    <td>$<%= item.total.toFixed(2) %></td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                                <td><strong>$<%= cart.totalAmount.toFixed(2) %></strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Delivery Fee:</strong></td>
+                                <td><strong>$<%= (cart.deliveryFee || 50).toFixed(2) %></strong></td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                <td><strong>$<%= (cart.grandTotal || (cart.totalAmount + (cart.deliveryFee || 50))).toFixed(2) %></strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Delivery Information</h5>
+                    <form action="/order/place" method="post" id="checkoutForm">
+                        <div class="mb-3">
+                            <label for="shippingAddress" class="form-label">Shipping Address</label>
+                            <textarea class="form-control" id="shippingAddress" name="shippingAddress" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="contactPhone" class="form-label">Contact Phone</label>
+                            <input type="tel" 
+                                   class="form-control" 
+                                   id="contactPhone" 
+                                   name="contactPhone" 
+                                   pattern="[0-9]{11}"
+                                   minlength="11"
+                                   maxlength="11"
+                                   required
+                                   title="Please enter exactly 11 digits">
+                            <div class="form-text">Phone number must be exactly 11 digits</div>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> Payment Method: Cash on Delivery
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Place Order</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+    const phoneInput = document.getElementById('contactPhone');
+    const phoneNumber = phoneInput.value.replace(/\D/g, ''); // Remove non-digits
+    
+    if (phoneNumber.length !== 11) {
+        e.preventDefault();
+        alert('Phone number must be exactly 11 digits');
+        phoneInput.focus();
+    }
+});
+</script>
+
+<%- include('../partials/footer') %> 

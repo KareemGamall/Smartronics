@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const OrderSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     products: [{
         product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
         quantity: { type: Number, required: true, default: 1 }
@@ -11,9 +11,9 @@ const OrderSchema = new mongoose.Schema({
     },
     orderStatus: {
         type: String,
-        enum: ['Pending', 'Confirmed'],
+        enum: ['Confirmed'],
         required: true,
-        default: 'Pending',
+        default: 'Confirmed',
     },
     OrderID: {
         type: Number,
@@ -31,6 +31,12 @@ const OrderSchema = new mongoose.Schema({
     ContactNumber: {
         type: String,
         required: true,
+        validate: {
+            validator: function(v) {
+                return /^\d{11}$/.test(v);
+            },
+            message: props => `${props.value} is not a valid phone number! Must be exactly 11 digits.`
+        }
     },
     PaymentMethod: {
         type: String,

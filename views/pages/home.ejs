@@ -1,0 +1,83 @@
+<%- include('../partials/header') %>
+
+<main>
+    <section class="hero-section">
+        <div class="hero-image">
+            <img src="https://res.cloudinary.com/dtvxoju3p/image/upload/v1749432616/home_vv28uq.jpg" 
+                 alt="Smartronix Hero Image"
+                 class="img-fluid">
+        </div>
+    </section>
+
+    <section class="categories">
+        <h2>Categories</h2>
+        <div class="categories-grid">
+            <% if (mainCategories && mainCategories.length > 0) { %>
+                <% mainCategories.forEach(category => { %>
+                    <div class="category-card">
+                        <img src="<%= category.imageUrl %>" alt="<%= category.name %>">
+                        <h3><%= category.name %></h3>
+                        <p><%= category.description %></p>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p>No categories available.</p>
+            <% } %>
+        </div>
+    </section>
+
+    <section class="new-arrivals">
+        <h2>New Arrivals</h2>
+        <div class="container">
+            <div class="row">
+                <% if (newArrivals && newArrivals.length > 0) { %>
+                    <% newArrivals.forEach(product => { %>
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                <!-- Product Image -->
+                                <img src="<%= product.imageUrl %>" 
+                                     class="card-img-top" 
+                                     alt="<%= product.name %>"
+                                     style="height: 200px; object-fit: cover;">
+                                
+                                <!-- Product Details -->
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= product.name %></h5>
+                                    <p class="card-text text-muted">
+                                        <%= product.description.substring(0, 100) %>...
+                                    </p>
+                                    <p class="card-text">
+                                        <strong>Price: $<%= product.price %></strong>
+                                    </p>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            Category: <%= product.category ? product.category.name : 'Uncategorized' %>
+                                        </small>
+                                    </p>
+                                </div>
+                                
+                                <!-- Card Footer -->
+                                <div class="card-footer bg-white">
+                                    <button class="btn btn-primary btn-block add-to-cart-btn" 
+                                            data-product-id="<%= product._id %>"
+                                            data-bs-toggle="tooltip"
+                                            title="Add to Cart">
+                                        <i class="fas fa-cart-plus"></i> Add To Cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <div class="col-12">
+                        <div class="alert alert-info" role="alert">
+                            No new arrivals available.
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+</main>
+
+<%- include('../partials/footer') %> 

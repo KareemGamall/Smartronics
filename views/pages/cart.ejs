@@ -1,0 +1,115 @@
+<%- include('../partials/header') %>
+
+<div class="cartpage">
+    <% if (!cart || !cart.items || cart.items.length === 0) { %>
+        <div class="empty-cart">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added anything yet.</p>
+            <a href="/products" class="continue-shopping">Continue Shopping</a>
+        </div>
+    <% } else { %>
+        <div class="cartitems">
+            <% cart.items.forEach(item => { %>
+                <div class="cartitem">
+                    <div class="productincart">
+                        <img src="<%= item.product.imageUrl %>" alt="<%= item.product.name %>" />
+                        <div class="itemdetails">
+                            <p><%= item.product.name %></p>
+                            <span class="itemsize">Price: $<%= item.price.toFixed(2) %></span>
+                        </div>
+                    </div>
+                    <span class="itemprice">$<%= item.price.toFixed(2) %></span>
+                    <div class="quantity">
+                        <input type="number" 
+                               class="qty" 
+                               value="<%= item.quantity %>" 
+                               data-price="<%= item.price %>" 
+                               data-product-id="<%= item.product._id %>"
+                               min="1" />
+                    </div>
+                    <span class="totalprice">$<%= item.total.toFixed(2) %></span>
+                    <button class="remove" 
+                            onclick="removeFromCart('<%= item.product._id %>')">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            <% }); %>
+        </div>
+
+        <div class="cart-total">
+            <h3>Cart Total</h3>
+            <p>Subtotal <span class="subtotal">$<%= cart.totalAmount.toFixed(2) %></span></p>
+            <p>Delivery Fee <span>(Standard) $50.00</span></p>
+            <p>Grand Total <span class="grandtotal">$<%= (cart.totalAmount + 50).toFixed(2) %></span></p>
+            <form action="/order/checkout" method="get">
+                <button type="submit" class="checkout-btn">Proceed to Checkout</button>
+            </form>
+        </div>
+    <% } %>
+</div>
+
+<script>
+// Function to update quantity
+async function updateQuantity(productId, quantity) {
+    try {
+        const response = await fetch('/cart/update', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                productId: productId,
+                quantity: quantity
+            })
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            // Reload the page to show updated cart
+            window.location.reload();
+        } else {
+            showMessage('Error updating quantity', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showMessage('Error updating quantity', 'error');
+    }
+}
+
+// Function to remove item from cart
+async function removeFromCart(productId) {
+    try {
+        const response = await fetch(`/cart/remove/${productId}`, {
+            method: 'DELETE'
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            // Reload the page to show updated cart
+            window.location.reload();
+        } else {
+            showMessage('Error removing item', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showMessage('Error removing item', 'error');
+    }
+}
+
+// Add event listeners for quantity inputs
+document.addEventListener('DOMContentLoaded', function() {
+    const quantityInputs = document.querySelectorAll('.qty');
+    quantityInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const productId = this.dataset.productId;
+            const quantity = parseInt(this.value);
+            if (quantity > 0) {
+                updateQuantity(productId, quantity);
+            }
+        });
+    });
+});
+</script>
+
+<%- include('../partials/footer') %>

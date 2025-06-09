@@ -16,7 +16,7 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-        category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+    category: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
 
     stockQuantity: {
         type: Number,
@@ -30,5 +30,6 @@ const ProductSchema = new mongoose.Schema({
     },
 }, {
     timestamps: true,
-    });
-    module.exports = mongoose.model('Products', ProductSchema);
+});
+
+module.exports = mongoose.model('Product', ProductSchema);
