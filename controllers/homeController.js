@@ -17,7 +17,7 @@ exports.getHomePage = async (req, res) => {
       Product.find().sort({ createdAt: -1 }).limit(8).lean()
     ]);
     
-    res.render('home', {
+    res.render('pages/Home/home', {
       title: 'Homepage',
       featuredProducts,
       mainCategories,

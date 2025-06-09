@@ -36,7 +36,7 @@ const orderController = {
                 grandTotal: formatPrice(cart.totalAmount + DELIVERY_FEE)
             };
 
-            res.render('checkout', {
+            res.render('pages/Order/checkout', {
                 cart: cartWithDelivery,
                 title: 'Checkout'
             });
@@ -148,7 +148,7 @@ const orderController = {
             }
 
             console.log('Order found, rendering success page');
-            res.render('order-success', {
+            res.render('pages/Order/order-success', {
                 order: order,
                 title: 'Order Confirmation'
             });

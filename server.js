@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Set view engine and views directory
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views/pages'));
+app.set('views', path.join(__dirname, 'views'));
 
 // Import routes
 const homeRoutes = require('./routes/home');

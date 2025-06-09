@@ -225,7 +225,7 @@ const cartController = {
                 grandTotal: formatPrice((cart.totalAmount || 0) + DELIVERY_FEE)
             };
 
-            res.render('cart', { 
+            res.render('pages/Cart/cart', { 
                 cart: cartWithDelivery,
                 title: 'Shopping Cart'
             });
