@@ -1,7 +1,8 @@
-<%- include('../../../partials/header') %>
+<%- include('../../partials/header') %>
 
 <div class="container mt-4">
-    <h1 class="mb-4">Mobile Phones</h1>
+    <!-- Dynamic title based on category -->
+    <h1 class="mb-4"><%= title || 'Products' %></h1>
     
     <% if (typeof message !== 'undefined') { %>
         <div class="alert alert-info" role="alert">
@@ -56,11 +57,11 @@
         <% } else { %>
             <div class="col-12">
                 <div class="alert alert-info" role="alert">
-                    No mobile phones found. Please check back later.
+                    No products found in this category. Please check back later.
                 </div>
             </div>
         <% } %>
     </div>
 </div>
 
-<%- include('../../../partials/footer') %>
+<%- include('../../partials/footer') %>
