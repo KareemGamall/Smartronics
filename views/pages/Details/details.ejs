@@ -1,0 +1,51 @@
+<%- include('../../partials/header') %>
+
+<div class="product-container">
+    <div class="product-main">
+        <!-- Product Images -->
+        <div class="product-images">
+            <img src="<%= product.imageUrl %>" alt="<%= product.name %>" class="main-image" id="mainImage">
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info">
+            <h1 class="product-title"><%= product.name %></h1>
+            
+            <div class="product-price">
+                <span class="current-price">$<%= product.price %></span>
+            </div>
+
+            <p class="product-description">
+                <%= product.description %>
+            </p>
+
+            <div class="product-actions">
+                <div class="quantity-selector">
+                    <span class="quantity-label">Quantity:</span>
+                    <input type="number" 
+                           class="quantity-input" 
+                           value="1" 
+                           min="1" 
+                           max="<%= product.stockQuantity %>"
+                           data-stock="<%= product.stockQuantity %>"
+                           id="quantity">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary add-to-cart-btn" data-product-id="<%= product._id %>">
+                        <i class="fas fa-cart-plus"></i> Add to Cart
+                    </button>
+                </div>
+
+                <div class="availability <%= product.stockQuantity > 0 ? '' : 'out-of-stock' %>">
+                    <span class="status-dot <%= product.stockQuantity > 0 ? '' : 'out-of-stock' %>"></span>
+                    <%= product.stockQuantity > 0 ? `In Stock (${product.stockQuantity} available)` : 'Out of Stock' %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<%- include('../../partials/footer') %>

@@ -26,7 +26,9 @@
                                value="<%= item.quantity %>" 
                                data-price="<%= item.price %>" 
                                data-product-id="<%= item.product._id %>"
-                               min="1" />
+                               data-stock="<%= item.product.stockQuantity %>"
+                               min="1" 
+                               max="<%= item.product.stockQuantity %>" />
                     </div>
                     <span class="totalprice">$<%= item.total.toFixed(2) %></span>
                     <button class="remove" 
@@ -48,68 +50,5 @@
         </div>
     <% } %>
 </div>
-
-<script>
-// Function to update quantity
-async function updateQuantity(productId, quantity) {
-    try {
-        const response = await fetch('/cart/update', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                productId: productId,
-                quantity: quantity
-            })
-        });
-
-        const data = await response.json();
-        if (data.success) {
-            // Reload the page to show updated cart
-            window.location.reload();
-        } else {
-            showMessage('Error updating quantity', 'error');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showMessage('Error updating quantity', 'error');
-    }
-}
-
-// Function to remove item from cart
-async function removeFromCart(productId) {
-    try {
-        const response = await fetch(`/cart/remove/${productId}`, {
-            method: 'DELETE'
-        });
-
-        const data = await response.json();
-        if (data.success) {
-            // Reload the page to show updated cart
-            window.location.reload();
-        } else {
-            showMessage('Error removing item', 'error');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        showMessage('Error removing item', 'error');
-    }
-}
-
-// Add event listeners for quantity inputs
-document.addEventListener('DOMContentLoaded', function() {
-    const quantityInputs = document.querySelectorAll('.qty');
-    quantityInputs.forEach(input => {
-        input.addEventListener('change', function() {
-            const productId = this.dataset.productId;
-            const quantity = parseInt(this.value);
-            if (quantity > 0) {
-                updateQuantity(productId, quantity);
-            }
-        });
-    });
-});
-</script>
 
 <%- include('../../partials/footer') %>

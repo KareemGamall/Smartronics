@@ -35,14 +35,18 @@
                         <div class="col-md-4 mb-4">
                             <div class="card h-100">
                                 <!-- Product Image -->
-                                <img src="<%= product.imageUrl %>" 
-                                     class="card-img-top" 
-                                     alt="<%= product.name %>"
-                                     style="height: 200px; object-fit: cover;">
+                                <a href="/products/details/<%= product._id %>" class="text-decoration-none">
+                                    <img src="<%= product.imageUrl %>" 
+                                         class="card-img-top" 
+                                         alt="<%= product.name %>"
+                                         style="height: 200px; object-fit: cover;">
+                                </a>
                                 
                                 <!-- Product Details -->
                                 <div class="card-body">
-                                    <h5 class="card-title"><%= product.name %></h5>
+                                    <a href="/products/details/<%= product._id %>" class="text-decoration-none text-dark">
+                                        <h5 class="card-title"><%= product.name %></h5>
+                                    </a>
                                     <p class="card-text text-muted">
                                         <%= product.description.substring(0, 100) %>...
                                     </p>

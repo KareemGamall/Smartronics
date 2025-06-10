@@ -1,4 +1,3 @@
-console.log('productController.js loaded');
 const Product = require('../models/Products');
 const Category = require('../models/Category');
 
@@ -241,6 +240,32 @@ const productController = {
             console.error('Error getting laptops:', error);
             res.status(500).render('error', { 
                 error: 'Error loading laptops. Please try again later.'
+            });
+        }
+    },
+
+    // Get product details by ID
+    async getProductDetails(req, res) {
+        try {
+            const productId = req.params.id;
+            const product = await Product.findById(productId).populate('category');
+            
+            if (!product) {
+                return res.status(404).render('error', {
+                    message: 'Product not found',
+                    error: {}
+                });
+            }
+
+            res.render('pages/Details/details', {
+                product: product,
+                title: product.name
+            });
+        } catch (error) {
+            console.error('Error getting product details:', error);
+            res.status(500).render('error', {
+                message: 'Error loading product details',
+                error: process.env.NODE_ENV === 'development' ? error : {}
             });
         }
     }

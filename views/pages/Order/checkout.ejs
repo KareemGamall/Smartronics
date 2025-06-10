@@ -1,4 +1,4 @@
-<%- include('../partials/header') %>
+<%- include('../../partials/header') %>
 
 <div class="container mt-4">
     <h2>Checkout</h2>
@@ -48,10 +48,14 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Delivery Information</h5>
-                    <form action="/order/place" method="post" id="checkoutForm">
+                    <form action="/order/place" method="post" id="checkoutForm" class="needs-validation" novalidate>
                         <div class="mb-3">
                             <label for="shippingAddress" class="form-label">Shipping Address</label>
-                            <textarea class="form-control" id="shippingAddress" name="shippingAddress" required></textarea>
+                            <textarea class="form-control" id="shippingAddress" name="shippingAddress" required
+                                      minlength="10" maxlength="200"></textarea>
+                            <div class="invalid-feedback">
+                                Please enter a valid shipping address (10-200 characters).
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="contactPhone" class="form-label">Contact Phone</label>
@@ -64,12 +68,14 @@
                                    maxlength="11"
                                    required
                                    title="Please enter exactly 11 digits">
-                            <div class="form-text">Phone number must be exactly 11 digits</div>
+                            <div class="invalid-feedback">
+                                Phone number must be exactly 11 digits.
+                            </div>
                         </div>
                         <div class="alert alert-info">
                             <i class="fas fa-info-circle"></i> Payment Method: Cash on Delivery
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Place Order</button>
+                        <button type="submit" class="btn btn-primary w-100" id="submitBtn">Place Order</button>
                     </form>
                 </div>
             </div>
@@ -78,16 +84,30 @@
 </div>
 
 <script>
+// Form validation
 document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-    const phoneInput = document.getElementById('contactPhone');
-    const phoneNumber = phoneInput.value.replace(/\D/g, ''); // Remove non-digits
+    e.preventDefault();
     
-    if (phoneNumber.length !== 11) {
-        e.preventDefault();
-        alert('Phone number must be exactly 11 digits');
-        phoneInput.focus();
+    if (!this.checkValidity()) {
+        e.stopPropagation();
+        this.classList.add('was-validated');
+        return;
     }
+
+    // Show loading state
+    const submitBtn = document.getElementById('submitBtn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+
+    // Submit the form
+    this.submit();
+});
+
+// Real-time phone number validation
+document.getElementById('contactPhone').addEventListener('input', function(e) {
+    this.value = this.value.replace(/\D/g, '').slice(0, 11);
 });
 </script>
 
-<%- include('../partials/footer') %> 
+<%- include('../../partials/footer') %> 

@@ -9,11 +9,14 @@ router.get('/', productController.getAllProducts);
 // Get products by category
 router.get('/category/:categoryId', productController.getProductsByCategory);
 
-// Category-specific routes
+// Get specific category products
 router.get('/headphones', productController.getHeadphones);
 router.get('/mobilephones', productController.getMobilePhones);
 router.get('/tvs', productController.getTVs);
 router.get('/labtops', productController.getLaptops);
+
+// Get product details
+router.get('/details/:id', productController.getProductDetails);
 
 // Protected routes
 router.post('/', productController.createProduct);

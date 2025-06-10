@@ -1,8 +1,6 @@
-// Import the Cart model
 const Cart = require('../models/Cart');
 const Product = require('../models/Products');
 
-// Constants
 const DELIVERY_FEE = 50;
 
 // Helper function to format price
@@ -45,7 +43,10 @@ const cartController = {
             }
 
             // Check if product already in cart
-            const existingItem = cart.items.find(item => item.product.toString() === productId);
+            const existingItem = cart.items.find(item => {
+                const itemProductId = item.product._id ? item.product._id.toString() : item.product.toString();
+                return itemProductId === productId;
+            });
 
             if (existingItem) {
                 // Check if new total quantity exceeds stock
@@ -128,7 +129,10 @@ const cartController = {
             }
 
             // Update item quantity
-            const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
+            const itemIndex = cart.items.findIndex(item => {
+                const itemProductId = item.product._id ? item.product._id.toString() : item.product.toString();
+                return itemProductId === productId;
+            });
 
             if (itemIndex === -1) {
                 return res.status(404).json({ error: 'Item not found in cart' });
@@ -173,7 +177,10 @@ const cartController = {
             }
 
             // Remove item
-            cart.items = cart.items.filter(item => item.product.toString() !== productId);
+            cart.items = cart.items.filter(item => {
+                const itemProductId = item.product._id ? item.product._id.toString() : item.product.toString();
+                return itemProductId !== productId;
+            });
 
             // Update cart total
             cart.totalAmount = formatPrice(cart.items.reduce((total, item) => total + item.total, 0));

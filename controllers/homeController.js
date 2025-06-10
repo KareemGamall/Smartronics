@@ -12,9 +12,9 @@ exports.getHomePage = async (req, res) => {
 
     // Fetch all data in parallel for better performance
     const [featuredProducts, mainCategories, newArrivals] = await Promise.all([
-      Product.find({ featured: true }).limit(8).lean(),
+      Product.find({ featured: true }).populate('category').limit(8).lean(),
       Category.find({ parent: null }).limit(6).lean(),
-      Product.find().sort({ createdAt: -1 }).limit(8).lean()
+      Product.find().populate('category').sort({ createdAt: -1 }).limit(8).lean()
     ]);
     
     res.render('pages/Home/home', {
