@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - Smartronics</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .signup-container {
+        max-width: 500px;
+        margin: 50px auto;
+      }
+      .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
+      .card-header {
+        background-color: #fff;
+        border-bottom: none;
+        text-align: center;
+        padding: 20px;
+      }
+      .btn-primary {
+        width: 100%;
+        padding: 12px;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="signup-container">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="mb-0">Create Account</h3>
+          </div>
+          <div class="card-body p-4">
+            <div id="alertContainer"></div>
+            <form>
+              <div class="mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="name" name="name" />
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  name="password"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <div class="input-group">
+                  <span class="input-group-text">+20</span>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    placeholder="1012345678"
+                  />
+                </div>
+                <small class="form-text text-muted"
+                  >Enter a valid Egyptian phone number (e.g., 1012345678)</small
+                >
+              </div>
+
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label"
+                  >Confirm Password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                />
+              </div>
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="terms" />
+                <label class="form-check-label" for="terms"
+                  >I agree to the Terms and Conditions</label
+                >
+              </div>
+              <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form>
+            <div class="text-center mt-3">
+              <p class="mb-0">
+                Already have an account? <a href="/login">Login</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const signupForm = document.querySelector("form");
+      const alertContainer = document.getElementById("alertContainer");
+
+      function showAlert(message, type = "danger") {
+        const alertDiv = document.createElement("div");
+        alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+        alertDiv.innerHTML = `
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+        alertContainer.innerHTML = "";
+        alertContainer.appendChild(alertDiv);
+      }
+
+      signupForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.querySelector("#name").value;
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
+        const confirmPassword =
+          document.querySelector("#confirmPassword").value;
+        const phoneNumber = document.querySelector("#phoneNumber").value;
+
+        if (!name || !email || !password || !confirmPassword || !phoneNumber) {
+          showAlert("Please fill in all fields");
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          showAlert("Passwords do not match");
+          return;
+        }
+
+        if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+          showAlert("Please enter a valid email address");
+          return;
+        }
+
+        if (!phoneNumber.match(/^(10|11|12|15)\d{8}$/)) {
+          showAlert(
+            "Please enter a valid Egyptian phone number starting with +20 followed by 10, 11, 12, or 15"
+          );
+          return;
+        }
+
+        if (password.length < 8) {
+          showAlert("Password must be at least 8 characters long");
+          return;
+        }
+
+        try {
+          const response = await fetch("/api/user/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, email, password, phoneNumber }),
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            showAlert(data.error);
+          } else {
+            showAlert("User registered successfully", "success");
+            document.querySelector("#name").value = "";
+            document.querySelector("#email").value = "";
+            document.querySelector("#password").value = "";
+            document.querySelector("#confirmPassword").value = "";
+            document.querySelector("#phoneNumber").value = "";
+          }
+        } catch (error) {
+          console.log(error);
+          showAlert("Something went wrong");
+        }
+      });
+    </script>
+  </body>
+</html>

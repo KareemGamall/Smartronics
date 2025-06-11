@@ -7,6 +7,10 @@ const rateLimit = require('express-rate-limit');
 const compression = require('compression');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const User = require('./models/user');    
+const jwt = require("jsonwebtoken");
+require('dotenv').config();
+
 
 // Configuration
 const config = {
@@ -67,14 +71,43 @@ const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/order');
 const contactRoutes = require('./routes/contact');
+const userRoutes = require('./routes/user');
 
+app.use(async (req, res, next) => {
+    try {
+      const token = req.cookies.token;
+  
+      if (!token) {
+        res.locals.user = null;
+        return next();
+      }
+  
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_PHRASE);
+      const user = await User.findById(decoded.id);// ✅ updated field
+  
+      res.locals.user = user || null;
+      next();
+    } catch (error) {
+      console.error("JWT middleware error:", error);
+      res.locals.user = null;
+      return next();
+    }
+  });
 // Use routes
 app.use('/', homeRoutes);
 app.use('/products', productRoutes);
 app.use('/cart', cartRoutes);
 app.use('/order', orderRoutes);
 app.use('/contact', contactRoutes);
+app.use('/api/user', userRoutes);
 
+
+app.get("/login" , (req,res)=>{
+    res.render("pages/login")
+})
+app.get("/signup" , (req,res)=>{
+    res.render("pages/signup")
+})
 // Error handling
 app.use((err, req, res, next) => {
     console.error(err.stack);

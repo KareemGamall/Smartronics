@@ -1,73 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smartronix</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/style.css">
-</head>
-<body class="d-flex flex-column min-vh-100">
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body class="d-flex flex-column min-vh-100">
     <header>
-        <nav class="navbar navbar-expand-lg bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand text-light" href="/">Smartronix</a>
+      <nav class="navbar navbar-expand-lg bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand text-light" href="/">Smartronix</a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
-                        aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarContent"
+            aria-controls="navbarContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
 
-                <div class="collapse navbar-collapse" id="navbarContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="/">Home</a>
-                        </li>
-                       <li class="nav-item dropdown">
-    <a class="nav-link text-light" href="#" data-bs-toggle="dropdown" aria-expanded="false">Categories</a>
-    <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="/products">All Products</a></li>
-        <li><a class="dropdown-item" href="/products/category/1">Mobile Phones</a></li>
-        <li><a class="dropdown-item" href="/products/category/2">TVs</a></li>
-        <li><a class="dropdown-item" href="/products/category/3">Headphones</a></li>
-        <li><a class="dropdown-item" href="/products/category/4">Laptops</a></li>
-    </ul>
-</li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="/contact">Contact Us</a>
-                        </li>
-                    </ul>
+          <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link text-light" href="/">Home</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link text-light"
+                  href="#"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  >Categories</a
+                >
+                <ul class="dropdown-menu">
+                  <li>
+                    <a class="dropdown-item" href="/products">All Products</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/products/category/1"
+                      >Mobile Phones</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/products/category/2">TVs</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/products/category/3"
+                      >Headphones</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="/products/category/4"
+                      >Laptops</a
+                    >
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" href="/contact">Contact Us</a>
+              </li>
+            </ul>
 
-                    <form class="d-flex me-3" role="search">
-                        <input id="search" class="form-control me-2" type="search" placeholder="Search..." />
-                        <button id="SearchButton" class="btn btn-outline-light" type="submit">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                        </button>
-                    </form>
+            <form class="d-flex me-3" role="search">
+              <input
+                id="search"
+                class="form-control me-2"
+                type="search"
+                placeholder="Search..."
+              />
+              <button
+                id="SearchButton"
+                class="btn btn-outline-light"
+                type="submit"
+              >
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+            </form>
 
-                    <ul class="navbar-nav d-flex align-items-center">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link text-light" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-regular fa-user"></i>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/login">Login</a></li>
-                                <li><a class="dropdown-item" href="/profile">Profile</a></li>
-                                <li><a class="dropdown-item" href="/logout">Log Out</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light position-relative" href="/cart/view">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                <span class="CartCounter"></span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+            <ul class="navbar-nav d-flex align-items-center">
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link text-light"
+                  href="#"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fa-regular fa-user"></i>
+                </a>
+                <ul class="dropdown-menu">
+                  <% if (user != null) {%>
+                  <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                  <li><a class="dropdown-item" href="/api/user/logout">Log Out</a></li>
+                  <% }else{%>
+                  <li><a class="dropdown-item" href="/login">Login</a></li>
+                  <li><a class="dropdown-item" href="/Signup">Signup</a></li>
+                  <% }%>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link text-light position-relative"
+                  href="/cart/view"
+                >
+                  <i class="fa-solid fa-cart-shopping"></i>
+                  <span class="CartCounter"></span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
     </header>
+  </body>
+</html>
