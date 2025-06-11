@@ -7,11 +7,20 @@ const DELIVERY_FEE = 50;
 const formatPrice = (price) => Number(price.toFixed(2));
 
 const validatePhoneNumber = (phone) => {
+<<<<<<< HEAD
   const phoneNumber = phone.replace(/\D/g, "");
   return phoneNumber.length === 11; 
 };
 
 const orderController = {
+=======
+  const phoneNumber = phone.replace(/\D/g, ""); // Remove non-digits
+  return phoneNumber.length === 11; // Must be exactly 11 digits
+};
+
+const orderController = {
+  // Show checkout page
+>>>>>>> 0160af1 (Finished seif work)
   async checkout(req, res) {
     try {
       const cart = await Cart.findOne({
@@ -22,6 +31,10 @@ const orderController = {
         return res.redirect("/cart/view");
       }
 
+<<<<<<< HEAD
+=======
+      // Add delivery fee to the cart object
+>>>>>>> 0160af1 (Finished seif work)
       const cartWithDelivery = {
         ...cart.toObject(),
         deliveryFee: DELIVERY_FEE,
@@ -40,11 +53,19 @@ const orderController = {
     }
   },
 
+<<<<<<< HEAD
+=======
+  // Place order
+>>>>>>> 0160af1 (Finished seif work)
   async placeOrder(req, res) {
     try {
       console.log("Starting order placement process...");
       const { shippingAddress, contactPhone } = req.body;
 
+<<<<<<< HEAD
+=======
+      // Validate phone number
+>>>>>>> 0160af1 (Finished seif work)
       if (!validatePhoneNumber(contactPhone)) {
         console.log("Invalid phone number:", contactPhone);
         return res.status(400).render("checkout", {
@@ -54,6 +75,10 @@ const orderController = {
         });
       }
 
+<<<<<<< HEAD
+=======
+      // Get cart
+>>>>>>> 0160af1 (Finished seif work)
       console.log("Fetching cart...");
       const cart = await Cart.findOne({
         $or: [{ user: req.session.userId }, { sessionId: req.session.id }],
@@ -66,6 +91,10 @@ const orderController = {
 
       console.log("Cart found with items:", cart.items.length);
 
+<<<<<<< HEAD
+=======
+      // Create order
+>>>>>>> 0160af1 (Finished seif work)
       console.log("Creating new order...");
       const order = new Order({
         user: req.session.userId || null,
@@ -77,14 +106,26 @@ const orderController = {
         orderStatus: "Confirmed",
         OrderID: Date.now(),
         ShippingAddress: shippingAddress,
+<<<<<<< HEAD
         ContactNumber: contactPhone.replace(/\D/g, ""),
         PaymentMethod: "Cash on Delivery",
       });
 
+=======
+        ContactNumber: contactPhone.replace(/\D/g, ""), // Remove non-digits
+        PaymentMethod: "Cash on Delivery",
+      });
+
+      // Save order
+>>>>>>> 0160af1 (Finished seif work)
       console.log("Saving order to database...");
       const savedOrder = await order.save();
       console.log("Order saved successfully with ID:", savedOrder._id);
 
+<<<<<<< HEAD
+=======
+      // Update product stock
+>>>>>>> 0160af1 (Finished seif work)
       console.log("Updating product stock...");
       for (const item of cart.items) {
         await Product.findByIdAndUpdate(item.product._id, {
@@ -93,13 +134,25 @@ const orderController = {
         console.log(`Updated stock for product ${item.product._id}`);
       }
 
+<<<<<<< HEAD
+=======
+      // Clear cart
+>>>>>>> 0160af1 (Finished seif work)
       console.log("Clearing cart...");
       await Cart.findByIdAndDelete(cart._id);
       console.log("Cart cleared successfully");
 
+<<<<<<< HEAD
       req.session.lastOrderId = savedOrder._id;
       console.log("Order ID stored in session:", savedOrder._id);
 
+=======
+      // Store order ID in session for success page
+      req.session.lastOrderId = savedOrder._id;
+      console.log("Order ID stored in session:", savedOrder._id);
+
+      // Redirect to success page
+>>>>>>> 0160af1 (Finished seif work)
       res.redirect("/order/success");
     } catch (error) {
       console.error("Error placing order:", error);
@@ -109,6 +162,10 @@ const orderController = {
     }
   },
 
+<<<<<<< HEAD
+=======
+  // Show order success page
+>>>>>>> 0160af1 (Finished seif work)
   async orderSuccess(req, res) {
     try {
       const orderId = req.session.lastOrderId;

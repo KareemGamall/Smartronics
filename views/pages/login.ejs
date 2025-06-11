@@ -46,6 +46,7 @@
           </div>
           <div class="card-body p-4">
             <div id="alertContainer"></div>
+<<<<<<< HEAD
             <script>
               // Show alert if 'message' is in the URL
               const params = new URLSearchParams(window.location.search);
@@ -60,6 +61,8 @@
                 document.getElementById('alertContainer').appendChild(alertDiv);
               }
             </script>
+=======
+>>>>>>> 0160af1 (Finished seif work)
             <form>
               <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
@@ -155,6 +158,7 @@
           });
           const data = await response.json();
           if (!response.ok) {
+<<<<<<< HEAD
   showAlert(data.error);
 } else {
   showAlert("Login successful", "success");
@@ -169,6 +173,15 @@
     }
   }, 1000);
 }
+=======
+            showAlert(data.error);
+          } else {
+            showAlert("Login successful", "success");
+            setTimeout(() => {
+              window.location.href = "/";
+            }, 1000);
+          }
+>>>>>>> 0160af1 (Finished seif work)
         } catch (error) {
           console.log(error);
           showAlert("Something went wrong");

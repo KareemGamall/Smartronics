@@ -105,7 +105,11 @@
             </form>
             <div class="text-center mt-3">
               <p class="mb-0">
+<<<<<<< HEAD
                 Already have an account? <a id="loginLink" href="/login">Login</a>
+=======
+                Already have an account? <a href="/login">Login</a>
+>>>>>>> 0160af1 (Finished seif work)
               </p>
             </div>
           </div>
@@ -130,6 +134,7 @@
         alertContainer.appendChild(alertDiv);
       }
 
+<<<<<<< HEAD
       // Preserve redirect param in Login link
       const params = new URLSearchParams(window.location.search);
       const redirectUrl = params.get('redirect');
@@ -137,6 +142,8 @@
         document.getElementById('loginLink').href = `/login?redirect=${encodeURIComponent(redirectUrl)}`;
       }
 
+=======
+>>>>>>> 0160af1 (Finished seif work)
       signupForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const name = document.querySelector("#name").value;
@@ -186,6 +193,7 @@
             showAlert(data.error);
           } else {
             showAlert("User registered successfully", "success");
+<<<<<<< HEAD
             setTimeout(() => {
               // Check for redirect parameter in URL
               const params = new URLSearchParams(window.location.search);
@@ -196,6 +204,13 @@
                 window.location.href = "/";
               }
             }, 1000);
+=======
+            document.querySelector("#name").value = "";
+            document.querySelector("#email").value = "";
+            document.querySelector("#password").value = "";
+            document.querySelector("#confirmPassword").value = "";
+            document.querySelector("#phoneNumber").value = "";
+>>>>>>> 0160af1 (Finished seif work)
           }
         } catch (error) {
           console.log(error);

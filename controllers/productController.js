@@ -142,7 +142,11 @@ const productController = {
         return res.render("pages/Products/category", {
           products: [],
           title: "Products",
+<<<<<<< HEAD
           message: "Category not found.",
+=======
+          message: "No products found in this category.",
+>>>>>>> 0160af1 (Finished seif work)
         });
       }
 
@@ -152,8 +156,12 @@ const productController = {
 
       res.render("pages/Products/category", {
         products: products,
+<<<<<<< HEAD
         title: category.name,
         message: products.length === 0 ? "No products found in this category." : null
+=======
+        title: category.name, // Dynamic title from database!
+>>>>>>> 0160af1 (Finished seif work)
       });
     } catch (error) {
       console.error("Error getting products by category:", error);
@@ -186,6 +194,7 @@ const productController = {
       });
     }
   },
+<<<<<<< HEAD
   async searchProducts(req, res) {
     try {
       const query = req.query.q;
@@ -213,6 +222,8 @@ const productController = {
       });
     }
   },
+=======
+>>>>>>> 0160af1 (Finished seif work)
 };
 
 module.exports = productController;
