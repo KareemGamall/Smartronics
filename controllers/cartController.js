@@ -3,7 +3,6 @@ const Product = require('../models/Products');
 
 const DELIVERY_FEE = 50;
 
-// Helper functions
 const formatPrice = (price) => Number(price.toFixed(2));
 
 const createCartResponse = (cart) => ({
@@ -19,7 +18,6 @@ const handleEmptyCart = () => ({
     grandTotal: formatPrice(DELIVERY_FEE)
 });
 
-// Cart helper class
 class CartHelper {
     static async findUserCart(req) {
         return await Cart.findOne({
@@ -89,7 +87,6 @@ class CartHelper {
     }
 }
 
-// Error messages
 const ERROR_MESSAGES = {
     PRODUCT_NOT_FOUND: 'Product not found',
     INSUFFICIENT_STOCK: 'Not enough stock available',
@@ -99,22 +96,18 @@ const ERROR_MESSAGES = {
 };
 
 const cartController = {
-    // Add item to cart
     async addToCart(req, res) {
         try {
             const { productId, quantity } = req.body;
             
-            // Find or create cart
             let cart = await CartHelper.findUserCart(req);
             if (!cart) {
                 cart = CartHelper.createNewCart(req);
             }
 
-            // Check if product already exists in cart
             const existingItem = CartHelper.findCartItem(cart, productId);
             const currentQuantity = existingItem ? existingItem.quantity : 0;
 
-            // Validate stock
             const product = await CartHelper.validateProductStock(
                 productId, 
                 quantity, 
@@ -122,11 +115,9 @@ const cartController = {
             );
 
             if (existingItem) {
-                // Update existing item
                 existingItem.quantity += quantity;
                 existingItem.total = formatPrice(existingItem.quantity * existingItem.price);
             } else {
-                // Add new item
                 cart.items.push({
                     product: productId,
                     quantity: quantity,
@@ -135,11 +126,9 @@ const cartController = {
                 });
             }
 
-            // Update cart totals and save
             CartHelper.updateCartTotals(cart);
             await cart.save();
 
-            // Return populated cart
             const updatedCart = await Cart.findById(cart._id).populate('items.product');
             
             res.json({ 
@@ -162,7 +151,6 @@ const cartController = {
         }
     },
 
-    // Get cart contents
     async getCart(req, res) {
         try {
             const cart = await CartHelper.findUserCartWithProducts(req);
@@ -179,7 +167,6 @@ const cartController = {
         }
     },
 
-    // Update cart item quantity
     async updateCart(req, res) {
         try {
             const { productId, quantity } = req.body;
@@ -194,16 +181,13 @@ const cartController = {
                 return res.status(404).json({ error: ERROR_MESSAGES.ITEM_NOT_FOUND });
             }
 
-            // Validate stock for new quantity
             await CartHelper.validateProductStock(productId, quantity);
 
-            // Update item
             cart.items[itemIndex].quantity = quantity;
             cart.items[itemIndex].total = formatPrice(
                 cart.items[itemIndex].price * quantity
             );
 
-            // Update cart totals and save
             CartHelper.updateCartTotals(cart);
             await cart.save();
 
@@ -226,7 +210,6 @@ const cartController = {
         }
     },
 
-    // Remove item from cart
     async removeFromCart(req, res) {
         try {
             const { productId } = req.params;
@@ -236,7 +219,6 @@ const cartController = {
                 return res.status(404).json({ error: ERROR_MESSAGES.CART_NOT_FOUND });
             }
 
-            // Remove item
             cart.items = cart.items.filter(item => {
                 const itemProductId = item.product._id ? 
                     item.product._id.toString() : 
@@ -244,7 +226,6 @@ const cartController = {
                 return itemProductId !== productId;
             });
 
-            // Update cart totals and save
             CartHelper.updateCartTotals(cart);
             await cart.save();
 
@@ -258,14 +239,22 @@ const cartController = {
             res.status(500).json({ error: ERROR_MESSAGES.GENERAL_ERROR });
         }
     },
+            res.json({ 
+                success: true, 
+                cart: createCartResponse(cart) 
+            });
 
-    // View cart page (renders HTML)
+        } catch (error) {
+            console.error('Error removing from cart:', error);
+            res.status(500).json({ error: ERROR_MESSAGES.GENERAL_ERROR });
+        }
+    },
+
     async viewCart(req, res) {
         try {
             let cart = await CartHelper.findUserCartWithProducts(req);
             
             if (!cart) {
-                // Create empty cart structure for template
                 cart = {
                     items: [],
                     totalAmount: 0,
@@ -283,7 +272,25 @@ const cartController = {
                 deliveryFee: DELIVERY_FEE,
                 grandTotal: formatPrice((cart.totalAmount || 0) + DELIVERY_FEE)
             };
+            const cartWithDelivery = {
+                ...(typeof cart.toObject === 'function' ? cart.toObject() : cart),
+                deliveryFee: DELIVERY_FEE,
+                grandTotal: formatPrice((cart.totalAmount || 0) + DELIVERY_FEE)
+            };
 
+            res.render('pages/Cart/cart', { 
+                cart: cartWithDelivery,
+                title: 'Shopping Cart'
+            });
+
+        } catch (error) {
+            console.error('Error viewing cart:', error);
+            res.status(500).render('error', { 
+                message: 'Error loading cart. Please try again later.',
+                error: error.message
+            });
+        }
+    }
             res.render('pages/Cart/cart', { 
                 cart: cartWithDelivery,
                 title: 'Shopping Cart'

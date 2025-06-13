@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/orderController');
+const auth = require('../middleware/auth');
 
-// View routes
-router.get('/checkout', orderController.checkout);
-router.get('/success', orderController.orderSuccess);
-
-// API routes
-router.post('/place', orderController.placeOrder);
+   router.get('/checkout', auth(), orderController.checkout);
+   router.post('/place', auth(), orderController.placeOrder);
+   router.get('/success', auth(), orderController.orderSuccess);
 
 module.exports = router; 

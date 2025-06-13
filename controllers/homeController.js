@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 
 exports.getHomePage = async (req, res) => {
   try {
-    // Check database connection
     if (mongoose.connection.readyState !== 1) {
       console.log("Database connection state:", mongoose.connection.readyState);
       throw new Error(
@@ -12,7 +11,6 @@ exports.getHomePage = async (req, res) => {
       );
     }
 
-    // Fetch all data in parallel for better performance
     const [featuredProducts, mainCategories, newArrivals] = await Promise.all([
       Product.find({ featured: true }).populate("category").limit(8).lean(),
       Category.find({ parent: null }).limit(6).lean(),

@@ -34,7 +34,6 @@
                     <% newArrivals.forEach(product => { %>
                         <div class="col-md-4 mb-4">
                             <div class="card h-100">
-                                <!-- Product Image -->
                                 <a href="/products/details/<%= product._id %>" class="text-decoration-none">
                                     <img src="<%= product.imageUrl %>" 
                                          class="card-img-top" 
@@ -42,7 +41,6 @@
                                          style="height: 200px; object-fit: cover;">
                                 </a>
                                 
-                                <!-- Product Details -->
                                 <div class="card-body">
                                     <a href="/products/details/<%= product._id %>" class="text-decoration-none text-dark">
                                         <h5 class="card-title"><%= product.name %></h5>
@@ -60,7 +58,6 @@
                                     </p>
                                 </div>
                                 
-                                <!-- Card Footer -->
                                 <div class="card-footer bg-white">
                                     <button class="btn btn-primary btn-block add-to-cart-btn" 
                                             data-product-id="<%= product._id %>"
