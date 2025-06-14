@@ -14,6 +14,7 @@ const productController = {
         return res.render("pages/Products/products", {
           products: [],
           message: "No products available at the moment.",
+          layout: false
         });
       }
 
@@ -28,12 +29,14 @@ const productController = {
       res.render("pages/Products/products", {
         products: products,
         title: "Our Products",
+        layout: false
       });
     } catch (error) {
       console.error("Detailed error in getAllProducts:", error);
       console.error("Error stack:", error.stack);
       res.status(500).render("error", {
         error: "Error loading products. Please try again later.",
+        layout: false
       });
     }
   },
@@ -143,6 +146,7 @@ const productController = {
           products: [],
           title: "Products",
           message: "No products found in this category.",
+          layout: false
         });
       }
 
@@ -152,12 +156,14 @@ const productController = {
 
       res.render("pages/Products/category", {
         products: products,
-        title: category.name, // Dynamic title from database!
+        title: category.name,
+        layout: false
       });
     } catch (error) {
       console.error("Error getting products by category:", error);
       res.status(500).render("error", {
         error: "Error loading products. Please try again later.",
+        layout: false
       });
     }
   },
@@ -170,18 +176,21 @@ const productController = {
         return res.status(404).render("error", {
           message: "Product not found",
           error: {},
+          layout: false
         });
       }
 
       res.render("pages/Details/details", {
         product: product,
         title: product.name,
+        layout: false
       });
     } catch (error) {
       console.error("Error getting product details:", error);
       res.status(500).render("error", {
         message: "Error loading product details",
         error: process.env.NODE_ENV === "development" ? error : {},
+        layout: false
       });
     }
   },

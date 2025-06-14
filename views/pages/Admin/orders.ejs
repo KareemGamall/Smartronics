@@ -1,0 +1,114 @@
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Order Management</h1>
+</div>
+
+<!-- Search Bar -->
+<div class="mb-3">
+    <input type="text" id="searchInput" class="form-control" placeholder="Search orders...">
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">All Orders</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>User</th>
+                        <th>Products</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (orders && orders.length > 0) { %>
+                        <% orders.forEach(order => { %>
+                            <tr>
+                                <td><%= order.OrderID %></td>
+                                <td><%= order.user ? order.user.name : 'Guest' %></td>
+                                <td>
+                                    <ul style="padding-left: 18px;">
+                                        <% order.products.forEach(item => { %>
+                                            <li>
+                                                <%= item.product ? item.product.name : 'Unknown' %> x <%= item.quantity %>
+                                            </li>
+                                        <% }) %>
+                                    </ul>
+                                </td>
+                                <td>$<%= order.totalAmount.toFixed(2) %></td>
+                                <td><%= order.orderStatus %></td>
+                                <td><%= order.OrderDate ? new Date(order.OrderDate).toLocaleString() : '' %></td>
+                                <td>
+                                    <button class="btn btn-info btn-sm" onclick="viewOrder('<%= order._id %>')">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <!-- Delete functionality can be added here if needed -->
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="7" class="text-center">No orders found</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Order Details Modal (to be implemented) -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalLabel">Order Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="orderModalBody">
+                <!-- Order details will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const ordersData = <%- JSON.stringify(orders) %>;
+function viewOrder(orderId) {
+    const order = ordersData.find(o => o._id === orderId);
+    if (!order) return;
+    let html = `<strong>Order ID:</strong> ${order.OrderID}<br>`;
+    html += `<strong>User:</strong> ${order.user ? order.user.name : 'Guest'}<br>`;
+    html += `<strong>Status:</strong> ${order.orderStatus}<br>`;
+    html += `<strong>Date:</strong> ${order.OrderDate ? new Date(order.OrderDate).toLocaleString() : ''}<br>`;
+    html += `<strong>Shipping Address:</strong> ${order.ShippingAddress || ''}<br>`;
+    html += `<strong>Contact Number:</strong> ${order.ContactNumber || ''}<br>`;
+    html += `<strong>Payment Method:</strong> ${order.PaymentMethod || ''}<br>`;
+    html += `<strong>Total Amount:</strong> $${order.totalAmount.toFixed(2)}<br>`;
+    html += `<strong>Products:</strong><ul>`;
+    order.products.forEach(item => {
+        html += `<li>${item.product ? item.product.name : 'Unknown'} x ${item.quantity}</li>`;
+    });
+    html += `</ul>`;
+    document.getElementById('orderModalBody').innerHTML = html;
+    const orderModal = new bootstrap.Modal(document.getElementById('orderModal'));
+    orderModal.show();
+}
+
+// Order Table Search
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+        const filter = searchInput.value.toLowerCase();
+        document.querySelectorAll('table tbody tr').forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? '' : 'none';
+        });
+    });
+}
+</script> 

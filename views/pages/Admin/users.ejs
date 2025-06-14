@@ -1,0 +1,274 @@
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">User Management</h1>
+    <button class="btn btn-primary" onclick="showAddUserModal()">
+        <i class="fas fa-plus"></i> Add New User
+    </button>
+</div>
+
+<!-- Search Bar -->
+<div class="mb-3">
+    <input type="text" id="searchInput" class="form-control text-white" placeholder="Search users...">
+</div>
+
+<!-- Users Table -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">All Users</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (users && users.length > 0) { %>
+                        <% users.forEach(user => { %>
+                            <tr data-user-id="<%= user._id %>">
+                                <td class="user-name"><%= user.name %></td>
+                                <td class="user-email"><%= user.email %></td>
+                                <td class="user-phone"><%= user.phoneNumber || 'N/A' %></td>
+                                <td class="user-role"><%= user.role || 'user' %></td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" onclick="editUser('<%= user._id %>')">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteUser('<%= user._id %>')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="5" class="text-center">No users found</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- User Modal -->
+<div class="modal fade" id="userModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Add New User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <input type="hidden" id="userId">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneNumber" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneNumber" pattern="^(10|11|12|15)\d{8}$" required>
+                        <small class="form-text text-muted">Enter a valid Egyptian phone number (10, 11, 12, or 15 followed by 8 digits)</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" minlength="8">
+                        <small class="form-text text-muted">Leave blank to keep existing password when editing</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="role" class="form-label">Role</label>
+                        <select class="form-control" id="role" required>
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveUser()">Save User</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Initialize Bootstrap modal
+let userModal;
+document.addEventListener('DOMContentLoaded', function() {
+    const modalElement = document.getElementById('userModal');
+    if (modalElement) {
+        userModal = new bootstrap.Modal(modalElement);
+    }
+});
+
+function showAddUserModal() {
+    const modalTitle = document.getElementById('modalTitle');
+    const userForm = document.getElementById('userForm');
+    const userId = document.getElementById('userId');
+    
+    if (modalTitle) modalTitle.textContent = 'Add New User';
+    if (userForm) userForm.reset();
+    if (userId) userId.value = '';
+    
+    if (userModal) userModal.show();
+}
+
+async function editUser(userId) {
+    try {
+        const response = await fetch(`/admin/users/${userId}`);
+        if (!response.ok) throw new Error('Failed to fetch user details');
+        
+        const user = await response.json();
+        
+        // Populate form fields
+        const modalTitle = document.getElementById('modalTitle');
+        const userIdInput = document.getElementById('userId');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phoneNumber');
+        const roleInput = document.getElementById('role');
+        
+        if (modalTitle) modalTitle.textContent = 'Edit User';
+        if (userIdInput) userIdInput.value = user._id;
+        if (nameInput) nameInput.value = user.name;
+        if (emailInput) emailInput.value = user.email;
+        if (phoneInput) phoneInput.value = user.phoneNumber || '';
+        if (roleInput) roleInput.value = user.role || 'user';
+        
+        if (userModal) userModal.show();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to load user details. Please try again.');
+    }
+}
+
+async function deleteUser(userId) {
+    if (confirm('Are you sure you want to delete this user?')) {
+        try {
+            const response = await fetch(`/admin/users/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                // Remove the user row from the table
+                const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+                if (row) {
+                    row.remove();
+                }
+                alert('User deleted successfully');
+                window.location.reload();
+            } else {
+                throw new Error(data.message || 'Failed to delete user');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to delete user. Please try again.');
+        }
+    }
+}
+
+async function saveUser() {
+    try {
+        // Validate form fields
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const phoneNumber = document.getElementById('phoneNumber').value;
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('role').value;
+
+        if (!name || !email || !phoneNumber || !role) {
+            alert('Error: Please fill in all required fields');
+            return;
+        }
+
+        // Validate phone number format
+        const phoneRegex = /^(10|11|12|15)\d{8}$/;
+        if (!phoneRegex.test(phoneNumber)) {
+            alert('Error: Please enter a valid Egyptian phone number');
+            return;
+        }
+
+        const userId = document.getElementById('userId').value;
+        const userData = {
+            name,
+            email,
+            phoneNumber,
+            role
+        };
+
+        // Only include password if it's provided (for new users or password changes)
+        if (password) {
+            userData.password = password;
+        }
+
+        console.log('Sending user data:', userData);
+
+        const url = userId ? `/admin/users/${userId}` : '/admin/users';
+        const method = userId ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        console.log('Response status:', response.status);
+
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            console.error('Non-JSON response:', text);
+            throw new Error('Server returned non-JSON response. Please try again.');
+        }
+
+        const data = await response.json();
+        console.log('Response data:', data);
+
+        if (data.success) {
+            if (userModal) {
+                userModal.hide();
+            }
+            alert(userId ? 'User updated successfully' : 'User added successfully');
+            window.location.reload();
+        } else {
+            throw new Error(data.message || 'Failed to save user');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert(error.message || 'Failed to save user. Please try again.');
+    }
+}
+
+// User Table Search
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+        const filter = searchInput.value.toLowerCase();
+        document.querySelectorAll('table tbody tr').forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? '' : 'none';
+        });
+    });
+}
+</script> 

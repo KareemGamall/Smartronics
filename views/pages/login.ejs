@@ -144,9 +144,15 @@
             showAlert(data.error);
           } else {
             showAlert("Login successful", "success");
-            setTimeout(() => {
-              window.location.href = "/";
-            }, 1000);
+            // For admin users, we need to ensure the token is set before redirecting
+            if (data.isAdmin) {
+              // Add a small delay to ensure the cookie is set
+              setTimeout(() => {
+                window.location.href = data.redirectUrl;
+              }, 100);
+            } else {
+              window.location.href = data.redirectUrl || '/';
+            }
           }
         } catch (error) {
           console.log(error);
