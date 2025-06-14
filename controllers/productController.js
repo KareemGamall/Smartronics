@@ -14,6 +14,7 @@ const productController = {
         return res.render("pages/Products/products", {
           products: [],
           message: "No products available at the moment.",
+          layout: false
         });
       }
 
@@ -28,12 +29,14 @@ const productController = {
       res.render("pages/Products/products", {
         products: products,
         title: "Our Products",
+        layout: false
       });
     } catch (error) {
       console.error("Detailed error in getAllProducts:", error);
       console.error("Error stack:", error.stack);
       res.status(500).render("error", {
         error: "Error loading products. Please try again later.",
+        layout: false
       });
     }
   },
@@ -146,7 +149,11 @@ const productController = {
           message: "Category not found.",
 =======
           message: "No products found in this category.",
+<<<<<<< HEAD
 >>>>>>> 0160af1 (Finished seif work)
+=======
+          layout: false
+>>>>>>> 9fa42a6 (Admin done)
         });
       }
 
@@ -157,16 +164,22 @@ const productController = {
       res.render("pages/Products/category", {
         products: products,
 <<<<<<< HEAD
+<<<<<<< HEAD
         title: category.name,
         message: products.length === 0 ? "No products found in this category." : null
 =======
         title: category.name, // Dynamic title from database!
 >>>>>>> 0160af1 (Finished seif work)
+=======
+        title: category.name,
+        layout: false
+>>>>>>> 9fa42a6 (Admin done)
       });
     } catch (error) {
       console.error("Error getting products by category:", error);
       res.status(500).render("error", {
         error: "Error loading products. Please try again later.",
+        layout: false
       });
     }
   },
@@ -179,18 +192,21 @@ const productController = {
         return res.status(404).render("error", {
           message: "Product not found",
           error: {},
+          layout: false
         });
       }
 
       res.render("pages/Details/details", {
         product: product,
         title: product.name,
+        layout: false
       });
     } catch (error) {
       console.error("Error getting product details:", error);
       res.status(500).render("error", {
         message: "Error loading product details",
         error: process.env.NODE_ENV === "development" ? error : {},
+        layout: false
       });
     }
   },

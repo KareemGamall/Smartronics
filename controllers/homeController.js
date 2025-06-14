@@ -27,12 +27,14 @@ exports.getHomePage = async (req, res) => {
       mainCategories,
       newArrivals,
       error: null,
+      layout: false
     });
   } catch (error) {
     console.error("Home page error:", error);
     res.status(500).render("error", {
       message: "Error loading home page. Please try again in a few moments.",
       error: process.env.NODE_ENV === "development" ? error : {},
+      layout: false
     });
   }
 };
