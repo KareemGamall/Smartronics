@@ -239,16 +239,6 @@ const cartController = {
             res.status(500).json({ error: ERROR_MESSAGES.GENERAL_ERROR });
         }
     },
-            res.json({ 
-                success: true, 
-                cart: createCartResponse(cart) 
-            });
-
-        } catch (error) {
-            console.error('Error removing from cart:', error);
-            res.status(500).json({ error: ERROR_MESSAGES.GENERAL_ERROR });
-        }
-    },
 
     async viewCart(req, res) {
         try {
@@ -272,25 +262,7 @@ const cartController = {
                 deliveryFee: DELIVERY_FEE,
                 grandTotal: formatPrice((cart.totalAmount || 0) + DELIVERY_FEE)
             };
-            const cartWithDelivery = {
-                ...(typeof cart.toObject === 'function' ? cart.toObject() : cart),
-                deliveryFee: DELIVERY_FEE,
-                grandTotal: formatPrice((cart.totalAmount || 0) + DELIVERY_FEE)
-            };
 
-            res.render('pages/Cart/cart', { 
-                cart: cartWithDelivery,
-                title: 'Shopping Cart'
-            });
-
-        } catch (error) {
-            console.error('Error viewing cart:', error);
-            res.status(500).render('error', { 
-                message: 'Error loading cart. Please try again later.',
-                error: error.message
-            });
-        }
-    }
             res.render('pages/Cart/cart', { 
                 cart: cartWithDelivery,
                 title: 'Shopping Cart'
