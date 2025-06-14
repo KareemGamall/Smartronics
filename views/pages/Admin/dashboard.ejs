@@ -1,0 +1,115 @@
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+</div>
+
+<!-- Alert Container -->
+<div id="alert-container"></div>
+
+<!-- Content Row -->
+<div class="row" id="dashboard-stats">
+    <!-- Monthly Revenue Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card info h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            Monthly Revenue</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="monthly-revenue">
+                            $<%= stats?.monthlyRevenue?.toFixed(2) || '0.00' %>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Annual Revenue Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card warning h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                            Annual Revenue</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="annual-revenue">
+                            $<%= stats?.annualRevenue?.toFixed(2) || '0.00' %>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Users Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card primary h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Total Users</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-users">
+                            <%= stats?.totalUsers || 0 %>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-users fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Products Card -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card stats-card success h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Total Products</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="total-products">
+                            <%= stats?.totalProducts || 0 %>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-box fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <a href="/admin/users" class="btn btn-primary btn-block mb-3">
+                            <i class="fas fa-users"></i> Manage Users
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="/admin/products" class="btn btn-success btn-block mb-3">
+                            <i class="fas fa-box"></i> Manage Products
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

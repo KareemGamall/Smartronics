@@ -155,20 +155,20 @@
           });
           const data = await response.json();
           if (!response.ok) {
-  showAlert(data.error);
-} else {
-  showAlert("Login successful", "success");
-  setTimeout(() => {
+            showAlert(data.error);
+          } else {
+            showAlert("Login successful", "success");
+              setTimeout(() => {
     // Check for redirect parameter in URL
     const params = new URLSearchParams(window.location.search);
     const redirectUrl = params.get('redirect');
     if (redirectUrl) {
       window.location.href = redirectUrl;
-    } else {
+            } else {
       window.location.href = "/";
-    }
+            }
   }, 1000);
-}
+          }
         } catch (error) {
           console.log(error);
           showAlert("Something went wrong");

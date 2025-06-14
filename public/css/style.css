@@ -43,7 +43,7 @@
     --warning-color: #ffa726;
     --danger-color: #ff5722;
     --text-dark: #ffffff;
-    --text-light: #1a1a2e;
+    --text-light: #ffffff;
     --text-muted: #a0a0a0;
     --bg-light: #1a1a2e;
     --bg-dark: #f8f9fa;
@@ -90,7 +90,7 @@
 }
 
 [data-theme="dark"] .navbar-nav .nav-link {
-    color: var(--text-light) !important;
+    color: #ffffff !important;
 }
 
 [data-theme="dark"] .navbar-nav .nav-link:hover {
@@ -98,7 +98,7 @@
 }
 
 [data-theme="dark"] .navbar-nav .nav-link i {
-    color: var(--text-light);
+    color: #ffffff;
 }
 
 [data-theme="dark"] .navbar-nav .nav-link:hover i {
@@ -1231,7 +1231,7 @@ h2::after {
 /* Navbar improvements */
 .navbar-brand:hover {
     transform: scale(1.05);
-    color: var(--success-color) !important;
+    color: var(--highlight-color) !important;
 }
 
 .navbar-nav .nav-link::after {
@@ -1241,7 +1241,7 @@ h2::after {
     left: 50%;
     width: 0;
     height: 2px;
-    background: var(--success-color);
+    background: var(--highlight-color);
     transition: var(--transition);
     transform: translateX(-50%);
 }
@@ -1537,5 +1537,59 @@ h2::after {
 
 [data-theme="dark"] .category-card:hover p {
     color: var(--text-light);
+}
+
+[data-theme="dark"] .new-arrivals {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .new-arrivals h2 {
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .new-arrivals h2::after {
+    background: var(--highlight-color);
+}
+
+[data-theme="dark"] .new-arrivals .card {
+    background: var(--primary-color);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .new-arrivals .card-body {
+    background: var(--primary-color);
+}
+
+[data-theme="dark"] .new-arrivals .card-footer {
+    background: var(--secondary-color) !important;
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .new-arrivals .card-footer.bg-white {
+    background: var(--secondary-color) !important;
+}
+
+[data-theme="dark"] .new-arrivals .card-footer .btn {
+    background: var(--gradient-primary);
+    color: var(--text-light);
+}
+
+[data-theme="dark"] .new-arrivals .card-footer .btn:hover {
+    background: var(--gradient-accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(50, 130, 184, 0.3);
+}
+
+[data-theme="dark"] .new-arrivals .card-title {
+    color: var(--text-dark);
+}
+
+[data-theme="dark"] .new-arrivals .card-text {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .new-arrivals .text-muted {
+    color: var(--text-muted) !important;
 }
  
