@@ -3,7 +3,7 @@
 <div class="container mt-4">
     <h1 class="mb-4"><%= title || 'Products' %></h1>
     
-    <% if (typeof message !== 'undefined') { %>
+    <% if (typeof message !== 'undefined' && message) { %>
         <div class="alert alert-info" role="alert">
             <%= message %>
         </div>
@@ -52,7 +52,7 @@
         <% } else { %>
             <div class="col-12">
                 <div class="alert alert-info" role="alert">
-                    No products found in this category. Please check back later.
+                    No products found. Please check back later.
                 </div>
             </div>
         <% } %>

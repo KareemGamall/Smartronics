@@ -56,6 +56,7 @@ if (config.env === 'development') {
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 // Set view engine and views directory
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));

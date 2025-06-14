@@ -3,12 +3,6 @@ const CONSTANTS = {
     DELIVERY_FEE: 50,
     AUTO_DISMISS_TIME: 5000,
     MIN_QUANTITY: 1,
-    API_ENDPOINTS: {
-        CART: '/cart',
-        ADD_TO_CART: '/cart/add',
-        UPDATE_CART: '/cart/update',
-        REMOVE_FROM_CART: '/cart/remove'
-    },
     SELECTORS: {
         CART_COUNTER: '.CartCounter',
         ADD_TO_CART_BTN: '.add-to-cart-btn',
@@ -16,23 +10,6 @@ const CONSTANTS = {
         QUANTITY_CONTROLS: '.qty',
         TAB_BUTTONS: '.tab-btn',
         TAB_CONTENTS: '.tab-content'
-    }
-};
-
-// Utility functions
-const Utils = {
-    formatPrice(price) {
-        return `$${parseFloat(price).toFixed(2)}`;
-    },
-
-    parseInteger(value, defaultValue = 0) {
-        const parsed = parseInt(value);
-        return isNaN(parsed) ? defaultValue : parsed;
-    },
-
-    validateQuantity(quantity, stockLimit) {
-        const qty = this.parseInteger(quantity, CONSTANTS.MIN_QUANTITY);
-        return Math.max(CONSTANTS.MIN_QUANTITY, Math.min(qty, stockLimit));
     }
 };
 
@@ -60,29 +37,46 @@ class CartAPI {
     }
 
     static async getCart() {
-        return await this.makeRequest(CONSTANTS.API_ENDPOINTS.CART);
+        return await this.makeRequest('/cart');
     }
 
     static async addToCart(productId, quantity) {
-        return await this.makeRequest(CONSTANTS.API_ENDPOINTS.ADD_TO_CART, {
+        return await this.makeRequest('/cart/add', {
             method: 'POST',
             body: JSON.stringify({ productId, quantity })
         });
     }
 
     static async updateCart(productId, quantity) {
-        return await this.makeRequest(CONSTANTS.API_ENDPOINTS.UPDATE_CART, {
+        return await this.makeRequest('/cart/update', {
             method: 'PUT',
             body: JSON.stringify({ productId, quantity })
         });
     }
 
     static async removeFromCart(productId) {
-        return await this.makeRequest(`${CONSTANTS.API_ENDPOINTS.REMOVE_FROM_CART}/${productId}`, {
+        return await this.makeRequest(`/cart/remove/${productId}`, {
             method: 'DELETE'
         });
     }
 }
+
+// Utility functions
+const Utils = {
+    formatPrice(price) {
+        return `$${parseFloat(price).toFixed(2)}`;
+    },
+
+    parseInteger(value, defaultValue = 0) {
+        const parsed = parseInt(value);
+        return isNaN(parsed) ? defaultValue : parsed;
+    },
+
+    validateQuantity(quantity, stockLimit) {
+        const qty = this.parseInteger(quantity, CONSTANTS.MIN_QUANTITY);
+        return Math.max(CONSTANTS.MIN_QUANTITY, Math.min(qty, stockLimit));
+    }
+};
 
 // UI Manager for DOM manipulations and user feedback
 class UIManager {
@@ -185,7 +179,6 @@ class CartManager {
 
     static async addToCart(productId, quantity = 1) {
         const button = document.querySelector(`[data-product-id="${productId}"]`);
-        
         UIManager.setLoadingState(button, true, 'Adding...');
 
         try {
@@ -206,7 +199,6 @@ class CartManager {
 
     static async updateQuantity(productId, quantity) {
         const input = document.querySelector(`input[data-product-id="${productId}"]`);
-        
         UIManager.setInputLoadingState(input, true);
 
         try {
@@ -221,15 +213,12 @@ class CartManager {
                     UIManager.updateItemTotal(productId, updatedItem.total);
                     UIManager.updateCartTotals(result.data.cart);
                     await this.updateCartCounter();
-                } else {
-                    throw new Error('Item not found in cart');
                 }
             } else {
                 throw new Error(result.error || 'Failed to update quantity');
             }
         } catch (error) {
             UIManager.showMessage(error.message || 'Error updating quantity', 'danger');
-            // Restore original value on error
             if (input && input.dataset.originalValue) {
                 input.value = input.dataset.originalValue;
             }
@@ -331,12 +320,18 @@ class EventHandlers {
         const addToCartButtons = document.querySelectorAll(CONSTANTS.SELECTORS.ADD_TO_CART_BTN);
         
         addToCartButtons.forEach(button => {
-            button.addEventListener('click', function(e) {
+            button.addEventListener('click', async function(e) {
                 e.preventDefault();
                 const productId = this.dataset.productId;
-                const quantityInput = document.querySelector(CONSTANTS.SELECTORS.QUANTITY_INPUT);
-                const quantity = quantityInput ? Utils.parseInteger(quantityInput.value, 1) : 1;
-                CartManager.addToCart(productId, quantity);
+                const quantity = 1;
+                
+                // Scroll to nav bar
+                const navBar = document.querySelector('nav');
+                if (navBar) {
+                    navBar.scrollIntoView({ behavior: 'smooth' });
+                }
+                
+                await CartManager.addToCart(productId, quantity);
             });
         });
     }
@@ -397,6 +392,35 @@ class BootstrapManager {
     }
 }
 
+// Theme Manager
+class ThemeManager {
+    static init() {
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            this.updateThemeIcon(themeIcon, savedTheme);
+        }
+
+        // Add click event listener
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            this.updateThemeIcon(themeIcon, newTheme);
+        });
+    }
+
+    static updateThemeIcon(icon, theme) {
+        icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+}
+
 // Main Application
 class ECommerceApp {
     static async initialize() {
@@ -421,4 +445,33 @@ class ECommerceApp {
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', ECommerceApp.initialize);
+document.addEventListener('DOMContentLoaded', function() {
+    ECommerceApp.initialize();
+    ThemeManager.init();
+
+    // Handle Contact Us link click
+    const contactLink = document.querySelector('a[href="#contact"]');
+    if (contactLink) {
+        contactLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            const footer = document.getElementById('contact');
+            if (footer) {
+                footer.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+
+    // Search form handling
+    const searchForm = document.querySelector('form[role="search"]');
+    const searchInput = document.getElementById('search');
+    
+    if (searchForm && searchInput) {
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const query = searchInput.value.trim();
+            if (query) {
+                window.location.href = `/products/search?q=${encodeURIComponent(query)}`;
+            }
+        });
+    }
+});

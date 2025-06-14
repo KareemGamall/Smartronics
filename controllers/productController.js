@@ -142,7 +142,7 @@ const productController = {
         return res.render("pages/Products/category", {
           products: [],
           title: "Products",
-          message: "No products found in this category.",
+          message: "Category not found.",
         });
       }
 
@@ -152,7 +152,8 @@ const productController = {
 
       res.render("pages/Products/category", {
         products: products,
-        title: category.name, // Dynamic title from database!
+        title: category.name,
+        message: products.length === 0 ? "No products found in this category." : null
       });
     } catch (error) {
       console.error("Error getting products by category:", error);
@@ -182,6 +183,33 @@ const productController = {
       res.status(500).render("error", {
         message: "Error loading product details",
         error: process.env.NODE_ENV === "development" ? error : {},
+      });
+    }
+  },
+  async searchProducts(req, res) {
+    try {
+      const query = req.query.q;
+      if (!query) {
+        return res.redirect('/products');
+      }
+
+      const products = await Product.find({
+        $or: [
+          { name: { $regex: query, $options: 'i' } },
+          { description: { $regex: query, $options: 'i' } }
+        ]
+      }).populate('category').lean();
+
+      res.render('pages/Products/category', {
+        title: `Search Results for "${query}"`,
+        products,
+        message: products.length === 0 ? 'No products found matching your search.' : null
+      });
+    } catch (error) {
+      console.error('Search error:', error);
+      res.status(500).render('error', {
+        message: 'Error performing search',
+        error: process.env.NODE_ENV === 'development' ? error : {}
       });
     }
   },

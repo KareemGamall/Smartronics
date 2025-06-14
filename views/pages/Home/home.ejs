@@ -3,7 +3,7 @@
 <main>
     <section class="hero-section">
         <div class="hero-image">
-            <img src="https://res.cloudinary.com/dtvxoju3p/image/upload/v1749432616/home_vv28uq.jpg" 
+            <img src="https://res.cloudinary.com/dtvxoju3p/image/upload/v1749877335/ChatGPT_Image_Jun_14_2025_08_01_45_AM_kghy7m.png" 
                  alt="Smartronix Hero Image"
                  class="img-fluid">
         </div>
@@ -14,11 +14,13 @@
         <div class="categories-grid">
             <% if (mainCategories && mainCategories.length > 0) { %>
                 <% mainCategories.forEach(category => { %>
-                    <div class="category-card">
-                        <img src="<%= category.imageUrl %>" alt="<%= category.name %>">
-                        <h3><%= category.name %></h3>
-                        <p><%= category.description %></p>
-                    </div>
+                    <a href="/products/category/<%= category.categoryID %>" class="category-link">
+                        <div class="category-card">
+                            <img src="<%= category.imageUrl %>" alt="<%= category.name %>">
+                            <h3><%= category.name %></h3>
+                            <p><%= category.description %></p>
+                        </div>
+                    </a>
                 <% }); %>
             <% } else { %>
                 <p>No categories available.</p>
